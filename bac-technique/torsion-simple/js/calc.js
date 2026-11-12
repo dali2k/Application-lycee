@@ -45,3 +45,28 @@ export const thetaLimDegParM = (degM) => degToRad(degM) / 1000
 
 /** Moment quadratique d'un rectangle b×h par rapport à l'axe parallèle à b : b·h³/12. */
 export const iRect = (b, h) => (b * h ** 3) / 12
+
+// --- Tube D/d : conditions D⁴ − d⁴ ≥ c·D (résistance) et D⁴ − d⁴ ≥ K (rigidité) ---
+export const tubeConsts = (mt, rpgMPa, G, thetaLim) => {
+  const m = Math.abs(mt)
+  return { c: (16 * m) / (PI * rpgMPa), K: (32 * m) / (PI * G * thetaLim) }
+}
+
+/** D fixé → d maximal. res/rig = null si aucun d ne convient ; retenu = le plus petit des deux. */
+export function dMaxTube(D, mt, rpgMPa, G, thetaLim) {
+  const { c, K } = tubeConsts(mt, rpgMPa, G, thetaLim)
+  const root = (x) => (x > 0 ? Math.pow(x, 0.25) : null)
+  const res = root(D ** 4 - c * D), rig = root(D ** 4 - K)
+  return { res, rig, retenu: res !== null && rig !== null ? Math.min(res, rig) : null }
+}
+
+/** d fixé → D minimal. res par bissection (quartique), rig en forme fermée ; retenu = le plus grand. */
+export function DMinTube(d, mt, rpgMPa, G, thetaLim) {
+  const { c, K } = tubeConsts(mt, rpgMPa, G, thetaLim)
+  const rig = Math.pow(d ** 4 + K, 0.25)
+  const f = (D) => D ** 4 - c * D - d ** 4 // convexe, f(d) ≤ 0 : une seule racine au-dessus de d
+  let lo = d, hi = Math.max(d, 1) * 2
+  while (f(hi) < 0 && hi < 1e7) hi *= 2
+  for (let i = 0; i < 80; i++) { const mid = (lo + hi) / 2; if (f(mid) < 0) lo = mid; else hi = mid }
+  return { res: hi, rig, retenu: Math.max(hi, rig) }
+}
