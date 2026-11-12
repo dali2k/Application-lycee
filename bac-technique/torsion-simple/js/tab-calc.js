@@ -1,5 +1,6 @@
 // Onglet 4 : calculateur de torsion (résistance, rigidité) avec solution rédigée.
-import { h, fmt } from './svg.js'
+import { h, fmt, svg } from './svg.js'
+import { drawBeam } from './iso.js'
 import * as c from './calc.js'
 import { SECTIONS, compute, norm } from './sections.js'
 
@@ -11,6 +12,10 @@ export function mount(root) {
   const grid = h('div', { class: 'grid2' }, root)
   const form = h('div', { class: 'card' }, grid, '<h2>Données</h2>')
   const out = h('div', {}, grid)
+  const view = h('div', { class: 'card' }, out, '<h3>La poutre étudiée (vue isométrique)</h3>')
+  const iso = svg('svg', { viewBox: '0 0 560 340', role: 'img', 'aria-label': 'Poutre en vue isométrique' }, view)
+  const isoNote = h('p', { class: 'lbl2' }, view)
+  const res = h('div', {}, out)
   const v = { ...DEF }
   const inputs = {}
 
@@ -79,7 +84,13 @@ export function mount(root) {
     steps.push(`Contrainte : τmax = ${circ ? 'Mt / (Io/ρmax)' : 'formule de la section'} = <b>${fmt(r.tauMax, 2)} MPa</b> ${r.tauMax <= rp ? '≤' : '>'} Rpg → ${tag(okR)}`)
     steps.push(`Rigidité : θ = ${circ ? 'Mt / (G·Io)' : 'formule de la section'} = ${fmt(r.theta, 9)} rad/mm = <b>${fmt(thDegM, 4)} °/m</b> ${okT ? '≤' : '>'} ${fmt(v.thl, 3)} °/m → ${tag(okT)}`)
     steps.push(`Angle de torsion : α = θ·L = <b>${fmt(al, 3)} °</b> sur ${fmt(v.L, 0)} mm`)
-    out.innerHTML = `<div class="card"><h2>Résultats</h2><table class="res">
+    const alRad = r.theta * v.L, vis = 2.6 * (1 - Math.exp(-(alRad * 300) / 2.6))
+    const dimTxt = { plein: `d = ${fmt(q.d, 0)} mm`, tube: `D = ${fmt(q.D, 0)} mm, d = ${fmt(q.d, 0)} mm`, rect: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm`, rectcreux: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm, épaisseur t = ${fmt(q.t, 0)} mm` }[v.sec]
+    if (Number.isFinite(alRad) && v.L > 0 && SECTIONS[v.sec].dims.every(([k]) => Number.isFinite(q[k]) && q[k] > 0)) {
+      const { compressed } = drawBeam(iso, { sec: v.sec, q, L: v.L, vis, lines: [`${SECTIONS[v.sec].label} · ${dimTxt} · L = ${fmt(v.L, 0)} mm`, `Mt = ${fmt(Mt / 1000, 1)} N·m → α = ${fmt(al, 3)} °`] })
+      isoNote.textContent = `Rayon gris pointillé : position avant torsion ; rayon rouge : après torsion. Angle dessiné ×${fmt(vis / Math.max(alRad, 1e-12), 0)} pour être visible${compressed ? ' ; longueur raccourcie (non à l’échelle)' : ''}.`
+    }
+    res.innerHTML = `<div class="card"><h2>Résultats</h2><table class="res">
       <tr><td>Couple Mt</td><td>${fmt(Mt / 1000, 2)} N·m</td></tr>
       <tr><td>τmax</td><td>${fmt(r.tauMax, 2)} MPa</td></tr><tr><td>Rpg = Reg / s</td><td>${fmt(rp, 1)} MPa</td></tr>
       <tr><td>Condition de résistance</td><td>${tag(okR)}</td></tr>
