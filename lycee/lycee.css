@@ -22,3 +22,19 @@ a.l-card:hover, a.l-card:focus-visible { transform:translateY(-3px); box-shadow:
 .l-card p { margin:0 0 14px; color:var(--l-mut); }
 .l-go { font-weight:600; color:var(--c,var(--l-acc)); }
 .l-foot { margin-top:32px; color:var(--l-mut); font-size:.85rem; }
+
+/* ===== Thème commun : une seule palette claire pour TOUTES les apps =====
+   Chaque app mappe ses variables sur les jetons --l-*. Charger ce fichier EN DERNIER. */
+:root, :root:root {
+  color-scheme: light;
+  --lightningcss-light: initial; --lightningcss-dark: ;
+  /* app statique */
+  --bg:var(--l-bg); --surface:var(--l-card); --text:var(--l-ink); --muted:var(--l-mut);
+  --border:var(--l-line); --accent:var(--l-acc); --on-accent:#fff; --ctl-border:#767f91;
+  --known:var(--l-ink); --unknown:#c2410c; --beam:#64748b; --highlight:#e0ecff;
+  --ok:#15803d; --ok-bg:#e7f6ec; --err:#b91c1c; --err-bg:#fdeaea;
+  /* app chaîne de cotes */
+  --card:var(--l-card); --ink:var(--l-ink); --mut:var(--l-mut); --line:var(--l-line); --acc:var(--l-acc);
+  font-family:system-ui,"Segoe UI",sans-serif;
+}
+body.l-app h1 { font-size:1.3rem; }
