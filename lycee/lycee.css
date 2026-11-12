@@ -38,3 +38,4 @@ a.l-card:hover, a.l-card:focus-visible { transform:translateY(-3px); box-shadow:
   font-family:system-ui,"Segoe UI",sans-serif;
 }
 body.l-app h1 { font-size:1.3rem; }
+nav.l-bar { box-sizing:border-box; height:var(--l-bar); min-height:var(--l-bar); margin:0 !important; padding:0 16px !important; align-items:center; line-height:1; overflow:hidden; white-space:nowrap; }
