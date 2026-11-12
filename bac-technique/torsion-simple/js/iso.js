@@ -37,7 +37,8 @@ function ray(poly, a) {
  * Renvoie { compressed } (vrai si la longueur est raccourcie à l'écran).
  */
 export function drawBeam(el, o) {
-  const { sec, q, L, vis, lines = [] } = o
+  const { sec, q, L, lines = [] } = o
+  const vis = -o.vis // angle négatif dans (y,z) = sens anti-horaire à l'écran, vu du bout libre
   el.innerHTML = ''
   const { outer, inner } = polys(sec, q)
   const md = Math.max(...outer.flat().map(Math.abs)) * 2
@@ -115,7 +116,7 @@ export function drawBeam(el, o) {
   const c0 = P(X, 0, 0)
   const ln = (p, q2, st) => svg('line', { x1: p[0], y1: p[1], x2: q2[0], y2: q2[1], ...st }, el)
   ln(c0, E(A0), { stroke: '#5a6676', 'stroke-width': 2.5, 'stroke-dasharray': '5 4' })
-  if (vis > 0.03) {
+  if (Math.abs(vis) > 0.03) {
     const arc = Array.from({ length: 17 }, (_, j) => E(A0 + (vis * j) / 16, 0.55))
     svg('polygon', { points: fmtP([c0, ...arc]), fill: 'rgba(217,72,15,.28)' }, el)
     svg('polyline', { points: fmtP(arc), fill: 'none', stroke: '#d9480f', 'stroke-width': 2.5 }, el)
@@ -127,20 +128,21 @@ export function drawBeam(el, o) {
   svg('circle', { cx: c0[0], cy: c0[1], r: 3, fill: '#1d2733' }, el)
 
   // couple Mt appliqué au bout libre
-  const ring = Array.from({ length: 31 }, (_, j) => { const a = -0.5 + (4.0 * j) / 30; return P(X, md * 0.65 * Math.cos(a), md * 0.65 * Math.sin(a)) })
+  const ring = Array.from({ length: 31 }, (_, j) => { const a = 0.5 - (4.0 * j) / 30; return P(X, md * 0.65 * Math.cos(a), md * 0.65 * Math.sin(a)) })
   svg('polyline', { points: fmtP(ring), fill: 'none', stroke: '#1f5fbf', 'stroke-width': 3 }, el)
   arrow(el, ...ring[27], ...ring[30], 'arr blue')
   svg('text', { x: ring[0][0] + 6, y: ring[0][1] + 14, class: 'lbl', style: 'font-weight:700;fill:#1f5fbf' }, el).textContent = 'Mt'
 
   // encart : vue de face agrandie du bout libre, pour lire l'angle α
   const ic = [480, 82], k = 50 / Math.max(...outer.map((p) => Math.hypot(...p)))
-  const S2 = (p, a = 0) => { const [y, z] = rot(p, a); return [ic[0] + k * y, ic[1] - k * z] }
+  // encart en miroir (y vers la gauche) : même sens de rotation à l'écran que la vue 3D
+  const S2 = (p, a = 0) => { const [y, z] = rot(p, a); return [ic[0] - k * y, ic[1] - k * z] }
   svg('rect', { x: 408, y: 8, width: 144, height: 150, fill: '#fff', stroke: '#c5cdd8', rx: 6 }, el)
   svg('text', { x: 414, y: 24, class: 'lbl2' }, el).textContent = 'Vue de face du bout libre'
   svg('polygon', { points: fmtP(outer.map((p) => S2(p))), fill: 'none', stroke: '#8793a3', 'stroke-dasharray': '4 3' }, el)
   svg('path', { d: dpath(outer.map((p) => S2(p, vis))) + (inner ? dpath(inner.map((p) => S2(p, vis))) : ''), 'fill-rule': 'evenodd', fill: '#e7edf5', stroke: '#2b3a4f', 'stroke-width': 1.5 }, el)
-  const R2 = (a, kk = 1) => [ic[0] + k * rho * kk * Math.cos(a), ic[1] - k * rho * kk * Math.sin(a)]
-  if (vis > 0.03) {
+  const R2 = (a, kk = 1) => [ic[0] - k * rho * kk * Math.cos(a), ic[1] - k * rho * kk * Math.sin(a)]
+  if (Math.abs(vis) > 0.03) {
     const arc2 = Array.from({ length: 17 }, (_, j) => R2(A0 + (vis * j) / 16, 0.55))
     svg('polygon', { points: fmtP([ic, ...arc2]), fill: 'rgba(217,72,15,.28)' }, el)
     svg('polyline', { points: fmtP(arc2), fill: 'none', stroke: '#d9480f', 'stroke-width': 2.5 }, el)

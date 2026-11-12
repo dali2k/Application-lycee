@@ -37,16 +37,17 @@ export function mount(root) {
 
   // Vue de face (côté libre) : rayon gris = position de départ, rayon rouge = après torsion, secteur = α.
   function drawFace(vis, al) {
-    const cx = 150, cy = 115, r = 85, a0 = -Math.PI / 2, a1 = a0 + vis
-    const P = (a, k = 1) => [cx + r * k * Math.cos(a), cy + r * k * Math.sin(a)]
+    // sens anti-horaire (vu du bout libre) : y d'écran vers le bas, donc −sin
+    const cx = 150, cy = 115, r = 85, a0 = Math.PI / 2, a1 = a0 + vis
+    const P = (a, k = 1) => [cx + r * k * Math.cos(a), cy - r * k * Math.sin(a)]
     face.innerHTML = ''
     svg('circle', { cx, cy, r, fill: '#fff', stroke: '#7b8794', 'stroke-width': 2 }, face)
     const [x0, y0] = P(a0), [x1, y1] = P(a1)
     if (vis > 0.01) {
-      svg('path', { d: `M${cx} ${cy}L${x0} ${y0}A${r} ${r} 0 ${vis > Math.PI ? 1 : 0} 1 ${x1} ${y1}Z`, fill: 'rgba(217,72,15,.22)' }, face)
+      svg('path', { d: `M${cx} ${cy}L${x0} ${y0}A${r} ${r} 0 ${vis > Math.PI ? 1 : 0} 0 ${x1} ${y1}Z`, fill: 'rgba(217,72,15,.22)' }, face)
       const [ax, ay] = P(a1 - 0.04, 0.55), [bx, by] = P(a0 + vis / 2, 0.62)
-      svg('path', { d: `M${P(a0, 0.55)[0]} ${P(a0, 0.55)[1]}A${r * 0.55} ${r * 0.55} 0 0 1 ${ax} ${ay}`, fill: 'none', stroke: '#d9480f', 'stroke-width': 3 }, face)
-      const t = P(a1, 0.55), u = [-Math.sin(a1), Math.cos(a1)]
+      svg('path', { d: `M${P(a0, 0.55)[0]} ${P(a0, 0.55)[1]}A${r * 0.55} ${r * 0.55} 0 0 0 ${ax} ${ay}`, fill: 'none', stroke: '#d9480f', 'stroke-width': 3 }, face)
+      const t = P(a1, 0.55), u = [-Math.sin(a1), -Math.cos(a1)]
       svg('polygon', { points: `${t[0] + u[0] * 4},${t[1] + u[1] * 4} ${t[0] - u[1] * 6 - u[0] * 2},${t[1] + u[0] * 6 - u[1] * 2} ${t[0] + u[1] * 6 - u[0] * 2},${t[1] - u[0] * 6 - u[1] * 2}`, fill: '#d9480f' }, face)
       svg('text', { x: bx + 4, y: by - 4, class: 'lbl', style: 'font-size:18px;font-weight:700;fill:#d9480f' }, face).textContent = 'α'
     }

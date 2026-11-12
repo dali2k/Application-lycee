@@ -88,7 +88,7 @@ export function mount(root) {
     const dimTxt = { plein: `d = ${fmt(q.d, 0)} mm`, tube: `D = ${fmt(q.D, 0)} mm, d = ${fmt(q.d, 0)} mm`, rect: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm`, rectcreux: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm, épaisseur t = ${fmt(q.t, 0)} mm` }[v.sec]
     if (Number.isFinite(alRad) && v.L > 0 && SECTIONS[v.sec].dims.every(([k]) => Number.isFinite(q[k]) && q[k] > 0)) {
       const { compressed } = drawBeam(iso, { sec: v.sec, q, L: v.L, vis, lines: [`${SECTIONS[v.sec].label} · ${dimTxt} · L = ${fmt(v.L, 0)} mm`, `Mt = ${fmt(Mt / 1000, 1)} N·m → α = ${fmt(al, 3)} °`] })
-      isoNote.textContent = `Rayon gris pointillé : position avant torsion ; rayon rouge : après torsion. Angle dessiné ×${fmt(vis / Math.max(alRad, 1e-12), 0)} pour être visible${compressed ? ' ; longueur raccourcie (non à l’échelle)' : ''}.`
+      isoNote.textContent = `Sens de Mt : anti-horaire vu du bout libre. Rayon gris pointillé : position avant torsion ; rayon rouge : après torsion. Angle dessiné ×${fmt(vis / Math.max(alRad, 1e-12), 0)} pour être visible${compressed ? ' ; longueur raccourcie (non à l’échelle)' : ''}.`
     }
     res.innerHTML = `<div class="card"><h2>Résultats</h2><table class="res">
       <tr><td>Couple Mt</td><td>${fmt(Mt / 1000, 2)} N·m</td></tr>

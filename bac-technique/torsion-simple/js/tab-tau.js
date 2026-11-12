@@ -16,7 +16,7 @@ export function mount(root) {
   const left = h('div', {}, grid), right = h('div', {}, grid)
   const face = svg('svg', { viewBox: '0 0 320 320', role: 'img', 'aria-label': 'Contrainte tangentielle dans la section' }, left)
   const gS = svg('g', {}, face)
-  svg('text', { x: 10, y: 22, class: 'lbl' }, face).textContent = '↻ Mt'
+  svg('text', { x: 10, y: 22, class: 'lbl' }, face).textContent = '↺ Mt (vu du bout libre)'
   const plot = svg('svg', { viewBox: '0 0 320 190', style: 'margin-top:12px' }, left)
 
   let id = 'plein', mt = 150
@@ -38,8 +38,9 @@ export function mount(root) {
     const f = 0.4 + (0.6 * mt) / 500
     const cls = anim ? 'arr grow' : 'arr'
     const put = (x, y, vx, vy, len, delay) => {
+      // sens anti-horaire (vu du bout libre) : on inverse le champ calculé dans le sens horaire
       const m = Math.hypot(vx, vy) || 1
-      const g = arrow(gS, x - (vx / m) * len / 2, y - (vy / m) * len / 2, x + (vx / m) * len / 2, y + (vy / m) * len / 2, cls)
+      const g = arrow(gS, x + (vx / m) * len / 2, y + (vy / m) * len / 2, x - (vx / m) * len / 2, y - (vy / m) * len / 2, cls)
       if (anim) { g.style.transformOrigin = `${x}px ${y}px`; g.style.animationDelay = delay + 's' }
     }
     const st = { fill: '#fde8dc', stroke: '#5a6676', 'stroke-width': 2 }
