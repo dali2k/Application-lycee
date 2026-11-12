@@ -1,0 +1,60 @@
+:root { --bg:#f3f5f9; --card:#fff; --ink:#1b2430; --mut:#5a6677; --line:#d8dee8; --acc:#2563eb; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui, "Segoe UI", sans-serif; }
+header { padding:14px 24px 0; }
+h1 { margin:0 0 10px; font-size:1.35rem; }
+h2 { margin:0 0 8px; font-size:1.05rem; }
+main { padding:0 24px 24px; max-width:1200px; margin:auto; }
+nav { display:flex; gap:6px; }
+button { font:inherit; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
+  border-radius:8px; padding:8px 16px; }
+button:hover { border-color:var(--acc); }
+.tab { border-radius:8px 8px 0 0; border-bottom:none; font-weight:600; }
+.tab.on { background:var(--acc); color:#fff; border-color:var(--acc); }
+.card { background:var(--card); border:1px solid var(--line); border-radius:0 10px 10px 10px; padding:14px; margin-bottom:14px; }
+#svg { width:100%; height:auto; display:block; background:#fff; }
+.legend { display:flex; flex-wrap:wrap; gap:6px 18px; font-size:.85rem; color:var(--mut); margin-top:6px; }
+.sw { display:inline-block; width:18px; height:12px; vertical-align:-1px; border:1px solid #666; margin-right:4px; }
+.sw.rot { background:#fdebd9; border-color:#e07a1f; } .sw.fix { background:#e3edfc; border-color:#3b6fd6; }
+.sw.hit { background:#dc2626; border-color:#dc2626; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:14px; }
+.push { font-size:1.1rem; font-weight:700; padding:12px 22px; background:#eef3ff; border-color:var(--acc); }
+.push.on { background:var(--acc); color:#fff; }
+.reset { background:#f5f5f5; }
+.chk, .rng { color:var(--mut); }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.grid .card { border-radius:10px; margin:0; }
+@media (max-width:800px) { .grid { grid-template-columns:1fr; } }
+.eq { font-size:1.2rem; margin:4px 0; }
+.cond { color:var(--mut); margin:0 0 6px; }
+.ok { color:#16a34a; } .ko { color:#dc2626; }
+.names { margin:6px 0; padding-left:20px; } .note, .hint { color:var(--mut); font-size:.85rem; }
+.rules { padding-left:20px; margin:4px 0 0; font-size:.92rem; }
+/* SVG */
+.sec { stroke:#111; stroke-width:1.4; stroke-linejoin:round; }
+.plein { stroke:#111; stroke-width:1.4; stroke-linejoin:round; }
+.circ { fill:#111; stroke:#111; stroke-width:.8; }
+.thread { stroke:#111; stroke-width:.7; }
+.ball { stroke:#444; stroke-width:.8; }
+.spin { stroke:#222; stroke-width:1.6; stroke-linecap:round; }
+.axis { stroke:#111; stroke-width:.7; stroke-dasharray:18 3 3 3; }
+.ext { stroke:#111; stroke-width:.7; }
+.lead { stroke:#111; stroke-width:.7; } .leadDot { fill:#111; }
+.dt { font:italic 400 14px 'ISO 3098','Osifont','Century Gothic','Segoe UI',sans-serif; paint-order:stroke; stroke:#fff; stroke-width:3px; stroke-linejoin:round; }
+.fr { fill:none; stroke:#111; stroke-width:1.4; } .fth { fill:none; stroke:#111; stroke-width:.7; }
+.ct { font:italic 400 11px 'ISO 3098','Osifont','Century Gothic','Segoe UI',sans-serif; fill:#111; }
+.ctb { font:italic 600 11px 'ISO 3098','Osifont','Century Gothic','Segoe UI',sans-serif; fill:#111; }
+.lab { font-size:14px; font-weight:600; fill:#222; } .sub { font-size:11.5px; fill:#555; font-style:italic; }
+.hit { stroke:#dc2626; stroke-width:4.5; stroke-linecap:round; }
+.force { fill:none; stroke:#dc2626; stroke-width:3.2; stroke-linejoin:round; stroke-linecap:round; }
+.fline { stroke:#dc2626; stroke-width:5; } .fl { font-size:20px; font-weight:800; fill:#dc2626; }
+.omega { font-size:15px; fill:#a8530c; font-weight:700; }
+.warn { font-size:18px; fill:#dc2626; font-weight:700; }
+.pc { font-size:11.5px; fill:#444; font-style:italic; }
+table.tol { border-collapse:collapse; margin:6px 0 10px; font-size:.9rem; width:100%; }
+.tol th, .tol td { border:1px solid var(--line); padding:3px 8px; text-align:right; }
+.tol th:first-child { text-align:left; font-weight:600; } .tol td.note { text-align:left; color:var(--mut); font-size:.8rem; }
+.repc { fill:#fff; stroke:#111; stroke-width:1.2; } .repn { font:600 12px system-ui,sans-serif; fill:#111; }
+.seg { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:8px 0 4px; font-size:.9rem; color:var(--mut); }
+.seg button { padding:4px 14px; border-radius:6px; } .seg button.on { background:var(--acc); color:#fff; border-color:var(--acc); }
+.parts { display:flex; flex-wrap:wrap; gap:2px 16px; font-size:.85rem; color:var(--ink); margin:4px 0; }

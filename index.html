@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications de mécanique</title>
+<link rel="icon" href="3eme-technique/favicon.svg" type="image/svg+xml">
+<style>
+:root { color-scheme: light; --bg:#f3f5f9; --card:#fff; --ink:#1b2430; --mut:#5a6677; --line:#d8dee8; --acc:#2563eb; --acc2:#0f766e; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,"Segoe UI",sans-serif; }
+.wrap { max-width:880px; margin:0 auto; padding:40px 20px; }
+h1 { font-size:clamp(1.5rem,5vw,2.1rem); margin:0 0 6px; }
+.sub { color:var(--mut); margin:0 0 28px; }
+h2 { font-size:1rem; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); margin:0 0 12px; }
+.levels { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+a.level { display:block; background:var(--card); border:1px solid var(--line); border-top:6px solid var(--c); border-radius:12px; padding:22px; color:inherit; text-decoration:none; transition:transform .15s, box-shadow .15s; }
+a.level:hover, a.level:focus-visible { transform:translateY(-3px); box-shadow:0 8px 20px rgba(27,36,48,.12); outline:none; }
+.tag { display:inline-block; font-size:.8rem; font-weight:600; color:#fff; background:var(--c); border-radius:999px; padding:2px 12px; }
+.level h3 { font-size:1.35rem; margin:10px 0 6px; }
+.level p { margin:0 0 14px; color:var(--mut); }
+.go { font-weight:600; color:var(--c); }
+footer { margin-top:36px; color:var(--mut); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Applications de mécanique</h1>
+  <p class="sub">Outils pour les études de mécanique — choisis ton niveau.</p>
+  <h2>Choix du niveau</h2>
+  <div class="levels">
+    <a class="level" href="3eme-technique/" style="--c:var(--acc)">
+      <span class="tag">3ème année</span>
+      <h3>3ème Technique</h3>
+      <p>Statique des solides : retrouver le sens et la valeur des forces inconnues sur une poutre, avec solution pas à pas.</p>
+      <span class="go">Ouvrir →</span>
+    </a>
+    <a class="level" href="bac-technique/" style="--c:var(--acc2)">
+      <span class="tag">4ème année</span>
+      <h3>Bac technique</h3>
+      <p>Jeux avec chaînes de cotes unilimites : roulements BC, arbre tournant et moyeu tournant.</p>
+      <span class="go">Ouvrir →</span>
+    </a>
+  </div>
+  <footer>Mohamed Ali MHENNI</footer>
+</div>
+</body>
+</html>
