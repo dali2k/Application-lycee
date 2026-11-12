@@ -65,12 +65,14 @@ export function mount(root) {
     const Mt = v.mode === 'p' ? c.coupleDepuisPuissance(v.P * 1000, v.N) : v.Mt * 1000
     const G = c.daNmm2ToMPa(v.G), r = compute(v.sec, v, Mt, G), q = norm(v.sec, v)
     const rp = c.rpg(v.Reg, v.s), thLim = c.thetaLimDegParM(v.thl)
-    const thDegM = c.radToDeg(r.theta) * 1000, al = c.radToDeg(r.theta * v.L)
-    const okR = r.tauMax <= rp, okT = r.theta <= thLim
+    // Un couple négatif donne τ et θ négatifs : on compare les valeurs absolues (sinon faux « vérifiée »).
+    const tauA = Math.abs(r.tauMax), thA = Math.abs(r.theta)
+    const thDegM = c.radToDeg(thA) * 1000, al = c.radToDeg(r.theta * v.L)
+    const okR = tauA <= rp, okT = thA <= thLim
     const tag = (ok) => `<span class="${ok ? 'ok' : 'bad'}">${ok ? '✔ vérifiée' : '✘ non vérifiée'}</span>`
     let dmin = ''
     if (v.sec === 'plein') {
-      const a = c.dMiniResistance(Mt, rp), b = c.dMiniRigidite(Mt, G, thLim)
+      const a = c.dMiniResistance(Math.abs(Mt), rp), b = c.dMiniRigidite(Math.abs(Mt), G, thLim)
       dmin = `<tr><td>d mini (résistance)</td><td>${fmt(a, 2)} mm</td></tr>
         <tr><td>d mini (rigidité)</td><td>${fmt(b, 2)} mm</td></tr>
         <tr><td><b>d à retenir (le plus grand)</b></td><td><b>${fmt(Math.max(a, b), 2)} mm</b></td></tr>`
@@ -81,20 +83,20 @@ export function mount(root) {
     steps.push(`Résistance pratique : Rpg = Reg / s = ${fmt(v.Reg, 0)} / ${fmt(v.s, 2)} = <b>${fmt(rp, 1)} MPa</b>`)
     if (circ) steps.push(`Io = ${v.sec === 'plein' ? `π·d⁴/32 = π·${fmt(q.d, 1)}⁴/32` : `π(D⁴ − d⁴)/32`} = <b>${fmt(r.io, 0)} mm⁴</b> ; Io/ρmax = <b>${fmt(r.w, 0)} mm³</b>`)
     else steps.push(`Section ${SECTIONS[v.sec].label.toLowerCase()} : formules de tables (coefficients de Saint-Venant / Bredt).`)
-    steps.push(`Contrainte : τmax = ${circ ? 'Mt / (Io/ρmax)' : 'formule de la section'} = <b>${fmt(r.tauMax, 2)} MPa</b> ${r.tauMax <= rp ? '≤' : '>'} Rpg → ${tag(okR)}`)
-    steps.push(`Rigidité : θ = ${circ ? 'Mt / (G·Io)' : 'formule de la section'} = ${fmt(r.theta, 9)} rad/mm = <b>${fmt(thDegM, 4)} °/m</b> ${okT ? '≤' : '>'} ${fmt(v.thl, 3)} °/m → ${tag(okT)}`)
+    steps.push(`Contrainte : |τmax| = |${circ ? 'Mt / (Io/ρmax)' : 'formule de la section'}| = <b>${fmt(tauA, 2)} MPa</b> ${tauA <= rp ? '≤' : '>'} Rpg → ${tag(okR)}`)
+    steps.push(`Rigidité : |θ| = |${circ ? 'Mt / (G·Io)' : 'formule de la section'}| = ${fmt(thA, 9)} rad/mm = <b>${fmt(thDegM, 4)} °/m</b> ${okT ? '≤' : '>'} ${fmt(v.thl, 3)} °/m → ${tag(okT)}`)
     steps.push(`Angle de torsion : α = θ·L = <b>${fmt(al, 3)} °</b> sur ${fmt(v.L, 0)} mm`)
-    const alRad = r.theta * v.L, vis = 2.6 * (1 - Math.exp(-(alRad * 300) / 2.6))
+    const alRad = r.theta * v.L, vis = Math.sign(alRad) * 2.6 * (1 - Math.exp(-(Math.abs(alRad) * 300) / 2.6))
     const dimTxt = { plein: `d = ${fmt(q.d, 0)} mm`, tube: `D = ${fmt(q.D, 0)} mm, d = ${fmt(q.d, 0)} mm`, rect: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm`, rectcreux: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm, épaisseur t = ${fmt(q.t, 0)} mm` }[v.sec]
     if (Number.isFinite(alRad) && v.L > 0 && SECTIONS[v.sec].dims.every(([k]) => Number.isFinite(q[k]) && q[k] > 0)) {
       const { compressed } = drawBeam(iso, { sec: v.sec, q, L: v.L, vis, lines: [`${SECTIONS[v.sec].label} · ${dimTxt} · L = ${fmt(v.L, 0)} mm`, `Mt = ${fmt(Mt / 1000, 1)} N·m → α = ${fmt(al, 3)} °`] })
-      isoNote.textContent = `Sens de Mt : anti-horaire vu du bout libre. Rayon gris pointillé : position avant torsion ; rayon rouge : après torsion. Angle dessiné ×${fmt(vis / Math.max(alRad, 1e-12), 0)} pour être visible${compressed ? ' ; longueur raccourcie (non à l’échelle)' : ''}.`
+      isoNote.textContent = `Sens de Mt : ${vis < 0 ? 'horaire (Mt négatif)' : 'anti-horaire'} vu du bout libre. Rayon gris pointillé : position avant torsion ; rayon rouge : après torsion. Angle dessiné ×${fmt(Math.abs(vis) / Math.max(Math.abs(alRad), 1e-12), 0)} pour être visible${compressed ? ' ; longueur raccourcie (non à l’échelle)' : ''}.`
     }
     res.innerHTML = `<div class="card"><h2>Résultats</h2><table class="res">
       <tr><td>Couple Mt</td><td>${fmt(Mt / 1000, 2)} N·m</td></tr>
-      <tr><td>τmax</td><td>${fmt(r.tauMax, 2)} MPa</td></tr><tr><td>Rpg = Reg / s</td><td>${fmt(rp, 1)} MPa</td></tr>
+      <tr><td>|τmax|</td><td>${fmt(tauA, 2)} MPa</td></tr><tr><td>Rpg = Reg / s</td><td>${fmt(rp, 1)} MPa</td></tr>
       <tr><td>Condition de résistance</td><td>${tag(okR)}</td></tr>
-      <tr><td>θ</td><td>${fmt(thDegM, 4)} °/m</td></tr><tr><td>Condition de rigidité</td><td>${tag(okT)}</td></tr>
+      <tr><td>|θ|</td><td>${fmt(thDegM, 4)} °/m</td></tr><tr><td>Condition de rigidité</td><td>${tag(okT)}</td></tr>
       <tr><td>Angle α</td><td>${fmt(al, 3)} °</td></tr>${dmin}</table></div>
       <div class="card"><h3>Solution rédigée</h3><ol class="steps">${steps.map((s) => `<li>${s}</li>`).join('')}</ol></div>`
   }

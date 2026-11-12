@@ -128,7 +128,7 @@ export function drawBeam(el, o) {
   svg('circle', { cx: c0[0], cy: c0[1], r: 3, fill: '#1d2733' }, el)
 
   // couple Mt appliqué au bout libre
-  const ring = Array.from({ length: 31 }, (_, j) => { const a = 0.5 - (4.0 * j) / 30; return P(X, md * 0.65 * Math.cos(a), md * 0.65 * Math.sin(a)) })
+  const ring = Array.from({ length: 31 }, (_, j) => { const a = 0.5 - (o.vis < 0 ? -4.0 : 4.0) * j / 30; return P(X, md * 0.65 * Math.cos(a), md * 0.65 * Math.sin(a)) })
   svg('polyline', { points: fmtP(ring), fill: 'none', stroke: '#1f5fbf', 'stroke-width': 3 }, el)
   arrow(el, ...ring[27], ...ring[30], 'arr blue')
   svg('text', { x: ring[0][0] + 6, y: ring[0][1] + 14, class: 'lbl', style: 'font-weight:700;fill:#1f5fbf' }, el).textContent = 'Mt'
