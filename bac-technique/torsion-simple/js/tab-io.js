@@ -2,6 +2,7 @@
 import { svg, h, slider, loop, fmt } from './svg.js'
 import { ioPlein } from './calc.js'
 import { mountExtras } from './tab-io2.js'
+import { legend, shade } from './shade.js'
 
 export function mount(root) {
   root.innerHTML = ''
@@ -10,7 +11,7 @@ export function mount(root) {
     <div class="formula">Io = Σ ρ² · ΔS &nbsp;&nbsp; (mm⁴) &nbsp;&nbsp; cercle plein : Io = π·d⁴ / 32</div>`)
   const grid = h('div', { class: 'grid2' }, root)
   const left = h('div', {}, grid), right = h('div', {}, grid)
-  const s = svg('svg', { viewBox: '0 0 560 280', role: 'img', 'aria-label': 'Couronnes et contributions' }, left)
+  const s = svg('svg', { viewBox: '0 0 560 300', role: 'img', 'aria-label': 'Couronnes et contributions' }, left)
   let d = 40, n = 8, shown = 8
   const R = 115, cx = 130, cy = 140
 
@@ -35,15 +36,16 @@ export function mount(root) {
       const circ = (r, sw) => `M${cx + r} ${cy}A${r} ${r} 0 1 ${sw} ${cx - r} ${cy}A${r} ${r} 0 1 ${sw} ${cx + r} ${cy}`
       svg('path', {
         d: circ(R1, 1) + (R0 > 0 ? circ(R0, 0) : '') + 'Z', 'fill-rule': 'evenodd',
-        fill: on ? `rgba(217,72,15,${0.12 + (0.88 * c) / cmax})` : '#f3f5f8', stroke: '#fff',
+        fill: on ? shade(c / cmax) : '#f3f5f8', stroke: '#fff',
       }, s)
       const bw = 220 / n, bh = (150 * c) / cmax
-      svg('rect', { x: 320 + i * bw + 1, y: 240 - bh, width: bw - 2, height: bh, fill: on ? '#d9480f' : '#e5e9ef' }, s)
+      svg('rect', { x: 320 + i * bw + 1, y: 240 - bh, width: bw - 2, height: bh, fill: on ? shade(c / cmax) : '#e5e9ef', stroke: on ? '#b32d00' : 'none', 'stroke-width': 0.6 }, s)
     })
     const T = (x, y, txt, cls = 'lbl2') => { svg('text', { x, y, class: cls }, s).textContent = txt }
     svg('line', { x1: 320, y1: 240, x2: 540, y2: 240, stroke: '#5a6676' }, s)
     svg('circle', { cx, cy, r: 3, fill: '#1d2733' }, s)
     T(cx - 40, 275, 'section (vue de face)'); T(320, 258, 'ρ : du centre vers le bord →')
+    legend(s, 380, 278, 70)
     T(320, 40, 'contribution ρ²·ΔS de chaque couronne', 'lbl')
     T(320, 62, `Σ = ${fmt(sum, 0)} mm⁴`, 'lbl')
     const exact = ioPlein(d)
