@@ -1,7 +1,7 @@
 /* Barre de navigation commune : Accueil > Niveau > Application */
 (function () {
   var LABELS = { '3eme-technique': '3ème Technique', 'bac-technique': 'Bac technique',
-    'statique-des-solides': 'Statique des solides', 'chaine-de-cotes': 'Chaîne de cotes unilimites' };
+    'statique-des-solides': 'Statique des solides', 'chaine-de-cotes': 'Chaîne de cotes unilimites', 'torsion-simple': 'Torsion simple' };
   var s = document.currentScript || document.querySelector('script[src$="lycee/bar.js"]');
   var root = new URL('../', s.src).pathname;
   var segs = location.pathname.slice(root.length).split('/').filter(Boolean);

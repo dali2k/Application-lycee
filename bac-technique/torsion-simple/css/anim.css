@@ -1,0 +1,17 @@
+/* Éléments SVG communs et animations. */
+.arr { color: var(--tau); }
+.arr line { stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.arr polygon { fill: currentColor; }
+.arr.blue { color: var(--accent); }
+.grow { animation: grow .7s ease-out both; }
+@keyframes grow { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.pulse { animation: pulse 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+.fiber { fill: none; stroke: #7b8794; stroke-width: 1.2; }
+.fiber.m0 { stroke: var(--tau); stroke-width: 2.6; }
+.axis { stroke: var(--ink2); stroke-dasharray: 5 4; fill: none; }
+.lbl { font-size: 12px; fill: var(--ink); }
+.lbl2 { font-size: 11px; fill: var(--ink2); }
+@media (prefers-reduced-motion: reduce) {
+  .grow, .pulse { animation: none; }
+}
