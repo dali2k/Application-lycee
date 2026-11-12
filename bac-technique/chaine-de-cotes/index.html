@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<link rel="stylesheet" href="../../lycee/lycee.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaîne de cotes unilimite — roulements BC</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="../../lycee/bar.js" defer></script>
+</head>
+<body>
+<header>
+  <h1>Chaîne de cotes unilimite — roulements à billes à contact radial (BC)</h1>
+  <nav>
+    <button id="tabArbre" class="tab on">Arbre tournant</button>
+    <button id="tabHub" class="tab">Moyeu tournant</button>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <svg id="svg" viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Coupe du montage avec roulements BC et chaîne de cotes">
+      <defs>
+        <radialGradient id="ball" cx="35%" cy="30%" r="75%">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#b8c0cc"/><stop offset="1" stop-color="#5b6572"/>
+        </radialGradient>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+        </marker>
+      </defs>
+    </svg>
+    <div class="seg">Chaîne de cotes du jeu :
+      <button id="chG" class="on">Jp G</button><button id="chD">Jp D</button><button id="chJ">J</button>
+      <span class="hint">puis pousser à gauche / à droite</span>
+      <label class="chk"><input type="checkbox" id="lc"> lettres minuscules</label></div>
+    <div class="parts" id="parts"></div>
+    <div class="legend">
+      <span><i class="sw rot"></i> pièces tournantes</span>
+      <span><i class="sw fix"></i> pièces fixes</span>
+      <span><i class="sw hit"></i> surface en butée (effort)</span>
+    </div>
+  </section>
+
+  <section class="controls">
+    <button id="btnL" class="push">◄ Pousser à gauche</button>
+    <button id="btnReset" class="reset">Reset</button>
+    <button id="btnR" class="push">Pousser à droite ►</button>
+    <label class="chk"><input type="checkbox" id="rot" checked> Rotation</label>
+    <label class="rng">Cote c : <input type="range" id="cRange" min="16" max="24" step="0.5" value="21">
+      <output id="cVal">21 mm</output></label>
+    <label class="rng">Jeu poulie nominal Jp : <input type="range" id="jpRange" min="-1" max="3" step="0.1" value="1.5">
+      <output id="jpVal">1,5 mm</output></label>
+  </section>
+
+  <div class="grid">
+    <section class="card"><h2>Chaîne de cotes</h2><div id="eq"></div></section>
+    <section class="card"><h2>Ce qui se passe</h2><div id="expl"></div>
+      <h2>Règles de montage BC</h2>
+      <ul class="rules">
+        <li><b>Un obstacle par roulement</b> : le roulement G n'arrête que vers la gauche, le roulement D que vers la droite ; entre les deux, la bague fixe est libre (pas d'épaulement intermédiaire).</li>
+        <li><b>Jeu fonctionnel J</b> : entre l'obstacle et le roulement qui ne travaille pas. Il apparaît à gauche ou à droite selon le sens de la poussée.</li>
+        <li><b>Arrêts axiaux normalisés</b> : épaulement, anneau élastique (arbre ou alésage), couvercle vissé.</li>
+        <li><b>Ajustements</b> : bague tournante serrée et arrêtée des 2 côtés, bague fixe glissante.</li>
+      </ul>
+    </section>
+  </div>
+  <p class="hint">Raccourcis : ← pousse à gauche · → pousse à droite · Échap remet au repos.</p>
+</main>
+
+<script src="js/dim.js"></script>
+<script src="js/model.js"></script>
+<script src="js/dims.js"></script>
+<script src="js/bearing.js"></script>
+<script src="js/pulley.js"></script>
+<script src="js/shaft.js"></script>
+<script src="js/hub.js"></script>
+<script src="js/texts.js"></script>
+<script src="js/chain.js"></script>
+<script src="js/frame.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
