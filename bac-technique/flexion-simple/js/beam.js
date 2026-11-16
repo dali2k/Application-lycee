@@ -39,9 +39,11 @@ export function drawBeam(s, loads, o = {}) {
     const dir = senseOf(f, o.dirs)
     const up = v === undefined ? dir !== -1 : v > 0
     const len = v === undefined ? 40 : Math.max(14, Math.abs(v) * pxN)
-    const g = up ? arrow(s, x, y0 + 28 + len, x, y0 + 28, 'arr') : arrow(s, x, y0 - 28 - len, x, y0 - 8, 'arr')
+    const open = v === undefined && !dir // sens pas encore trouvé : trait sans pointe, le sens n'est pas soufflé
+    const g = open ? svg('g', {}, s) : up ? arrow(s, x, y0 + 28 + len, x, y0 + 28, 'arr') : arrow(s, x, y0 - 28 - len, x, y0 - 8, 'arr')
+    if (open) svg('line', { x1: x, y1: y0 + 28, x2: x, y2: y0 + 28 + len }, g)
     g.setAttribute('class', 'arr ' + (react ? 'f-react' : 'f-known') + (o.hl === f.id ? ' hl' : ''))
-    if (v === undefined && !dir) g.setAttribute('stroke-dasharray', '4 3')
+    if (open) g.setAttribute('stroke-dasharray', '4 3')
     const { base, sub, suffix } = labelOf(f, o.dirs)
     const lane = pos[f.id].lane, shift = lane * PITCH
     const ty = up ? y0 + 28 + len + 14 + shift : y0 - 28 - len - 6 - shift
