@@ -13,6 +13,14 @@ export function drawWall(s, x, y0, right = false) {
   for (let k = -3; k <= 3; k++) svg('line', { x1: x + d * 12, y1: y0 + k * 8, x2: x + d * 20, y2: y0 + k * 8 + 8, stroke: '#5a6676' }, s)
 }
 
+/** Appui simple : triangle VIDE + sol hachuré (symbole normalisé), distinct d'une tête de flèche (triangle plein). */
+function drawSupport(s, x, y0) {
+  const g = svg('g', { class: 'support' }, s)
+  svg('polygon', { points: `${x},${y0 + 5} ${x - 9},${y0 + 21} ${x + 9},${y0 + 21}` }, g)
+  svg('line', { x1: x - 13, y1: y0 + 21, x2: x + 13, y2: y0 + 21 }, g)
+  for (const t of [-11, -4, 3, 10]) svg('line', { x1: x + t, y1: y0 + 21, x2: x + t - 4, y2: y0 + 25 }, g)
+}
+
 /**
  * drawBeam(s, loads, o) — dessine dans le <svg> `s`.
  * loads : { L, forces:[{id,x,kind,value|undefined}], couples? } (value indéfinie = inconnue, flèche pointillée)
@@ -34,7 +42,7 @@ export function drawBeam(s, loads, o = {}) {
   for (const f of loads.forces) {
     const x = sx(f.x), v = f.value, react = f.kind === 'unknown'
     if (react && o.type !== 'encastree') {
-      svg('polygon', { points: `${x},${y0 + 5} ${x - 9},${y0 + 22} ${x + 9},${y0 + 22}`, fill: '#e5e9ef', stroke: '#5a6676' }, s)
+      drawSupport(s, x, y0)
     }
     const dir = senseOf(f, o.dirs)
     const up = v === undefined ? dir !== -1 : v > 0

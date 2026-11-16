@@ -10,6 +10,8 @@ svg.flexsvg { max-height: none; }
 .arr.hl polygon { filter: drop-shadow(0 0 2px currentColor); }
 .arr:hover line { stroke-width: 4; }
 .pivot { fill: var(--accent); stroke: #fff; stroke-width: 2; }
+.support polygon { fill: #fff; stroke: #5a6676; stroke-width: 1.3; } /* appui : vide + sol hachuré ≠ tête de flèche */
+.support line { stroke: #5a6676; stroke-width: 1.3; }
 .gpoint { transform-box: fill-box; transform-origin: center; animation: pulse 1.6s ease-in-out infinite; }
 
 /* Rotation autour de G : ↺ sens positif = bleu, ↻ sens négatif = violet */
