@@ -1,0 +1,28 @@
+/* Onglets 2 et 3 : blocs de calcul, tronçons, tableaux défilants. */
+.tron { border-top: 1px dashed var(--line); padding-top: 4px; margin-top: 6px; }
+.tron:first-child { border-top: 0; }
+.tron p { margin: 4px 0; }
+#view .card .math-block { margin: 4px 0; }
+#view .tw { margin: 6px 0; }
+#view .tw table.ct th { white-space: nowrap; }
+.card .note { margin: 8px 0; font-size: .95rem; }
+#view table.ct td, #view table.ct th { white-space: nowrap; overflow-wrap: normal; }
+
+/* G glissant : poignée sur le dessin */
+.flexsvg { touch-action: pan-y; }
+.flexsvg .ghandle { fill: rgba(179, 45, 0, .12); stroke: #b32d00; stroke-width: 1.5; stroke-dasharray: 3 3; cursor: ew-resize; }
+.flexsvg .ghint { font-size: 10px; fill: #b32d00; pointer-events: none; }
+.flexsvg.dragging, .flexsvg.dragging .ghandle { cursor: grabbing; }
+.flexsvg:focus-visible { outline: 2px solid var(--accent, #4da3ff); outline-offset: 2px; }
+/* Rotation du morceau étudié autour de G (tab-coupe5.js) */
+.flexsvg .fhit { fill: transparent; cursor: pointer; }
+.flexsvg .fhit:hover, .flexsvg .fhit:focus-visible { fill: rgba(37, 99, 235, .12); stroke: var(--accent); stroke-dasharray: 3 3; outline: none; }
+.flexsvg .spinlbl { pointer-events: none; }
+.flexsvg .fhit.out:hover, .flexsvg .fhit.out:focus-visible { fill: rgba(109, 63, 224, .10); stroke: var(--cw); }
+.flexsvg .piece.spinning g.dim { opacity: .7; filter: none; } /* morceau non étudié éclairci pendant sa rotation */
+.flexsvg .spintxt { font-size: 13px; font-weight: 700; fill: currentColor; }
+.spinmsg:empty { display: none; }
+.spinmsg { margin: 6px 0 0; padding: 6px 10px; border-radius: 8px; background: var(--accent-soft); }
+@media (prefers-reduced-motion: no-preference) { .flexsvg .ghandle { animation: gpulse 2.4s ease-in-out infinite; } }
+@keyframes gpulse { 50% { stroke-opacity: .35; } }
+.stale { opacity: .6; transition: opacity .12s; }

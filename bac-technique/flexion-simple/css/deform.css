@@ -1,0 +1,14 @@
+/* Vue « déformée » de l'onglet 3 : fonds de zones sourit/pleure, poutre, fibres tendues, repère mobile. */
+.dz.pos { fill: rgba(37, 99, 235, .10); } .dz.neg { fill: rgba(220, 38, 38, .10); }
+.dzt { font-weight: 700; } .dzt.pos { fill: #1d4ed8; } .dzt.neg { fill: #b91c1c; }
+.exag { font-style: italic; fill: #b91c1c; font-weight: 700; }
+.bm-edge { fill: none; stroke: #5a6676; stroke-width: 15; stroke-linejoin: round; stroke-linecap: butt; }
+.bm-body { fill: none; stroke: #dbe2eb; stroke-width: 12; stroke-linejoin: round; stroke-linecap: butt; }
+.bm-f { stroke: #8a96a6; stroke-width: 1.2; }
+.tens { fill: none; stroke-width: 3.2; stroke-linejoin: round; }
+.tens.pos { stroke: #2563eb; } .tens.neg { stroke: #dc2626; }
+.inflex { fill: #fff; stroke: #1d2330; stroke-width: 2; }
+.cur-l { stroke: #b32d00; stroke-width: 1.2; stroke-dasharray: 5 3; }
+.cur-t { stroke: #b32d00; stroke-width: 2.2; stroke-linecap: round; }
+.readout { font-size: .92rem; min-height: 1.4em; }
+.readout b { white-space: nowrap; }

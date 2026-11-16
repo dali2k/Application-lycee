@@ -1,0 +1,59 @@
+/* Onglet 1 « Réactions » : formulaire d'exercice, tableaux de moments, boîte « Solution détaillée ». Réutilise les jetons de base.css. */
+.exform .xrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 4px 16px; }
+.exform label.f { grid-template-columns: minmax(0, 1fr) minmax(6rem, 10rem); }
+.exform .inl { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.exform .btn.on { background: var(--accent); color: var(--on-accent); }
+table.xf { border-collapse: collapse; width: 100%; font-size: .93rem; }
+table.xf th, table.xf td { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.xf thead th { background: var(--accent-soft); font-size: .8em; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+table.xf td input { width: 7.5rem; } table.xf td select { width: 100%; min-width: 9rem; }
+table.xf .pt { display: inline-flex; width: 1.8em; height: 1.8em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-weight: 700; }
+table.xf .fname { margin-left: 4px; white-space: nowrap; }
+table.xf input.pname { width: 2.6em; min-width: 2.6em; height: 2em; padding: 0 2px; border: 2px solid transparent; border-radius: 1em; text-align: center; font: inherit; font-weight: 700; }
+table.xf input.pname::placeholder { color: var(--on-accent); opacity: 1; }
+table.xf input.pname:focus { border-color: var(--on-accent); outline: 2px solid var(--accent); }
+table.xf input.pname[aria-invalid="true"] { background: var(--bad); }
+fieldset.chips { border: 0; margin: 8px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+fieldset.chips legend { width: 100%; padding: 0; margin-bottom: 4px; font-weight: 600; }
+fieldset.chips .rchip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; color: var(--ink); background: var(--card); }
+fieldset.chips .rchip input { margin: 0; accent-color: var(--accent); }
+fieldset.chips .rchip:has(input:checked) { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+fieldset.chips .rchip:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+fieldset.chips small { opacity: .8; }
+table.xf .del { min-width: 40px; color: var(--bad); }
+@media (max-width: 640px) {
+  table.xf thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.xf, table.xf tbody, table.xf tr, table.xf td, table.xf th { display: block; width: 100%; }
+  table.xf tr { border: 1px solid var(--line); border-radius: var(--radius-sm); margin: 8px 0; padding: 6px 8px; }
+  table.xf th, table.xf td { border: 0; display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 6px; align-items: center; padding: 3px 0; }
+  table.xf th[scope=row] { display: block; }
+  table.xf td::before { content: attr(data-label); color: var(--ink2); font-size: .85em; }
+  table.xf td input, table.xf td select { width: 100%; min-width: 0; }
+}
+/* Mise en page : poutre à gauche, étapes à droite (SVG collant sur grand écran) */
+.grid2.solo { grid-template-columns: minmax(0, 1fr); }
+.svgcol { min-width: 0; }
+@media (min-width: 901px) { .svgcol { position: sticky; top: 8px; } }
+.pbox[hidden] { display: none; }
+/* Tableaux de moments */
+.moment-blocks { display: grid; gap: 10px; margin: 8px 0; }
+table.moments { border-collapse: collapse; width: 100%; font-size: .92rem; font-variant-numeric: tabular-nums; }
+table.moments caption { text-align: left; font-weight: 700; padding: 2px 0 4px; }
+table.moments.ccw caption { color: var(--accent); } table.moments.cw caption { color: var(--cw); }
+table.moments th, table.moments td { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; white-space: nowrap; }
+table.moments thead th { color: var(--ink2); font-size: .82em; } table.moments tbody th { font-weight: 600; }
+table.moments tfoot th, table.moments tfoot td { font-weight: 700; border-top: 2px solid var(--ctl); }
+table.moments td:last-child { text-align: right; } table.moments.zero td:last-child { text-align: left; white-space: normal; }
+table.moments.ccw tfoot { background: var(--accent-soft); } table.moments.cw tfoot { background: var(--cw-soft); }
+@media (max-width: 480px) { table.moments { font-size: .8rem; } table.moments th, table.moments td { padding: 3px 4px; } }
+.card .q { font-weight: 600; } .card .q:focus-visible { outline-offset: 3px; }
+.card .hint { color: var(--ink2); font-weight: 400; } .nul { color: var(--ink2); }
+.fb.info { color: var(--ink2); }
+/* Solution détaillée */
+dialog.solution { width: min(46rem, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 0; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-2); overflow: hidden; }
+dialog.solution[open] { display: flex; flex-direction: column; }
+dialog.solution::backdrop { background: rgba(10, 15, 25, .55); }
+.sol-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.sol-head h2 { margin: 0; font-size: 1.1rem; color: var(--accent); }
+.sol-body { padding: 8px 14px 16px; overflow: auto; }
+.sol-step h3 { margin: 12px 0 4px; font-size: 1rem; color: var(--tau); }

@@ -1,0 +1,58 @@
+/* Onglets 4-6 (mise en page dynamique 320-1920 px) : blocs d'équations KaTeX, tableaux défilants, boutons de section, quiz. */
+.eqs { margin: 6px 0; padding: 2px 8px; border-left: 3px solid var(--accent-soft); background: color-mix(in srgb, var(--accent-soft) 35%, transparent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; max-width: 100%; }
+.eqs .math-block { padding: 1px 0; }
+.eqs .katex-display { margin: .3em 0; }
+.card .katex-display > .katex { white-space: nowrap; }
+.verdict .eqs { background: transparent; border-left-color: currentColor; }
+.verdict p { margin: 4px 0 0; font-weight: 700; }
+.lbl2 { color: var(--ink2); font-size: .88rem; }
+p.lbl2, .card p.lbl2 { font-size: .88rem; }
+
+/* Boutons de section : passent à la ligne, cibles tactiles >= 44 px */
+.secsel { display: flex; flex-wrap: wrap; gap: 6px; }
+.secsel button { flex: 1 1 5.5rem; min-height: 44px; padding: 6px 10px; }
+.btns button { min-height: 44px; }
+.chk { min-height: 44px; }
+.chk input { flex: none; }
+
+/* Curseurs et champs : pleine largeur, zone tactile large */
+.sl { display: block; width: 100%; }
+.sl input[type=range] { width: 100%; display: block; }
+.mini input { flex: 1 1 7rem; min-width: 0; max-width: 12rem; }
+.mini select, label.mini > select { flex: 1 1 12rem; min-width: 0; }
+
+/* Tableaux : défilants dans leur conteneur, jamais dans la page */
+.tw, .tblw { overflow-x: auto; max-width: 100%; }
+table.hy { min-width: 34rem; }
+table.hy th small { font-weight: 400; color: var(--ink2); }
+table.hy tr.tot td { background: var(--accent-soft); }
+table.res td:first-child { padding-right: 12px; }
+table.res .katex, table.hy .katex { font-size: 1em; }
+table.res td, table.hy td { vertical-align: middle; }
+
+/* Schémas : fluides, jamais plus larges que leur carte ; la 3D garde un cadre lisible */
+main svg:not(.katex svg) { width: 100%; height: auto; max-height: 78vh; }
+@media (min-width: 1400px) { main svg:not(.katex svg) { max-height: 70vh; } }
+
+/* Comparaison « même aire » */
+.cmp span { overflow-wrap: anywhere; }
+.cmp b .katex { font-size: .95em; }
+
+/* Quiz : énoncés avec formules, options lisibles et larges */
+.qz-q { font-size: 1.05rem; }
+.qz-opt { overflow-x: auto; line-height: 1.5; }
+.qz-opt .katex, .qz-exp .katex, .qz-q .katex { font-size: 1.05em; }
+.qz-exp { overflow-x: auto; }
+.qz-score { font-variant-numeric: tabular-nums; }
+.chip { white-space: nowrap; }
+@media (max-width: 420px) {
+  .eqs { padding: 2px 4px; }
+  .secsel button { flex: 1 1 40%; }
+  .mini input { max-width: none; }
+}
+@media (min-width: 1500px) { .grid2 { gap: 22px; } }
+
+/* Valeurs de forces : retour à la ligne automatique */
+.frow { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 6px 0; padding: 6px 10px; background: color-mix(in srgb, var(--accent-soft) 35%, transparent); border-radius: var(--radius-sm); }
+/* Textes de schéma : liseré de la couleur du papier pour rester lisibles sur la 3D */
+main svg:not(.katex svg) text { paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; stroke-linejoin: round; }

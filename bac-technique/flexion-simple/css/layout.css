@@ -1,0 +1,70 @@
+/* Mise en page adaptative : grilles, panneaux « feuille de cahier à marge », formulaires, tableaux, formules KaTeX. */
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(10px, 2vw, 18px); align-items: start; }
+.grid2 > *, .card, .two > *, .btns > * { min-width: 0; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+
+.card {
+  position: relative; background: var(--card); border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); border-radius: var(--radius);
+  box-shadow: var(--shadow-1); padding: clamp(10px, 2vw, 16px) clamp(12px, 2.4vw, 18px) clamp(10px, 2vw, 16px) clamp(18px, 3vw, 24px); margin-bottom: clamp(10px, 2vw, 16px);
+  overflow-wrap: anywhere;
+}
+.card::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 8px; width: 1.5px; background: var(--margin-rule); border-radius: 1px; }
+.card h2, .card h3 { margin: 0 0 6px; font-size: clamp(1rem, .95rem + .3vw, 1.15rem); letter-spacing: -.005em; color: var(--accent); }
+.card p { margin: 6px 0; }
+.card ul, .card ol { padding-left: 1.3em; }
+.card li { margin-bottom: 3px; }
+.formula { background: var(--accent-soft); border-radius: var(--radius-sm); padding: 6px 10px; margin: 8px 0; font-family: 'Cambria Math', Cambria, serif; font-size: 1.05rem; overflow-x: auto; max-width: 100%; }
+
+/* Contrôles et groupes */
+.sl { display: block; margin: 8px 0; font-size: .95rem; }
+.sl input { width: 100%; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.btn, .btns button { color: var(--accent); border-color: var(--accent); }
+.btns button.on, .btn.on { background: var(--accent); color: var(--on-accent); }
+label.f { display: grid; grid-template-columns: minmax(0, 1fr) minmax(5.5rem, 8rem); gap: 8px; margin: 4px 0; align-items: center; }
+label.f input, label.f select { width: 100%; }
+.mini { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0; }
+.mini input { width: 7rem; max-width: 100%; }
+.chk { display: flex; gap: 10px; align-items: center; margin: 6px 0; cursor: pointer; min-height: 32px; }
+.chk input { width: 20px; height: 20px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin: 6px 0; }
+@media (max-width: 560px) { .two { grid-template-columns: minmax(0, 1fr); } .btns > button { flex: 1 1 auto; } }
+details { margin: 8px 0; } details summary { cursor: pointer; color: var(--accent); min-height: 32px; display: flex; align-items: center; }
+
+/* Messages */
+.ok { color: var(--ok); font-weight: 700; } .bad { color: var(--bad); font-weight: 700; }
+.warn, .note { background: var(--tau-soft); border-left: 4px solid var(--tau); padding: 8px 12px; border-radius: var(--radius-sm); margin: 8px 0; }
+.fb.ok { color: var(--ok); font-weight: 700; } .fb.bad { color: var(--bad); font-weight: 700; }
+ol.steps { padding-left: 1.4em; line-height: 1.6; } ol.steps li { margin-bottom: 4px; }
+
+/* Tableaux : défilement horizontal dans leur conteneur, jamais dans la page */
+.tw, .tblw { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+table.res { border-collapse: collapse; width: 100%; }
+table.res td { border-bottom: 1px solid var(--line); padding: 5px 8px; }
+table.res td:last-child { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+table.ct { border-collapse: collapse; width: 100%; font-size: .9rem; }
+table.ct th, table.ct td { border-bottom: 1px solid var(--line); padding: 5px 8px; text-align: left; font-variant-numeric: tabular-nums; }
+table.ct th { white-space: nowrap; background: var(--accent-soft); font-weight: 600; font-size: .8em; text-transform: uppercase; letter-spacing: .05em; }
+table.ct tbody tr { transition: background-color .15s; } table.ct tbody tr:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+table.ct tr.ccw td:first-child, table.ct tr.ccw td:last-child { color: var(--accent); }
+table.ct tr.cw td:first-child, table.ct tr.cw td:last-child { color: var(--cw); }
+table.ct tr.sum td { background: var(--accent-soft); font-weight: 700; }
+table.hy { border-collapse: collapse; width: 100%; font-size: .9rem; font-variant-numeric: tabular-nums; }
+table.hy th { background: var(--accent-soft); font-weight: 600; text-align: right; padding: 5px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.hy td { text-align: right; padding: 5px 8px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); }
+table.hy th:first-child, table.hy td:first-child { text-align: left; font-family: inherit; }
+@media (max-width: 480px) { table.ct, table.hy { font-size: .8rem; } table.ct th, table.ct td, table.hy th, table.hy td { padding: 4px 5px; } }
+
+/* KaTeX : les expressions longues défilent dans leur bloc */
+.math-block { overflow-x: auto; overflow-y: hidden; max-width: 100%; color: var(--ink); padding: 2px 0; }
+.math-block .katex-display { margin: .4em 0; display: flex; justify-content: safe center; }
+.math-block .katex-display > .katex { flex: none; }
+.card .katex { font-size: 1.05em; }
+@media (max-width: 480px) { .card .katex { font-size: .95em; } }
+@media (max-width: 360px) { .card .katex { font-size: .88em; } }
+
+/* Bandeau « même poutre » (onglets 2, 3, 5) */
+.exbanner { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding-block: .6rem; }
+.exbanner p { margin: 0; flex: 1 1 22rem; }
+.exbanner .exf { white-space: nowrap; }
+.exbanner small { opacity: .8; }

@@ -1,0 +1,25 @@
+/* Onglets 4-6 : moment quadratique, contraintes, quiz. */
+.secsel { display: flex; flex-wrap: wrap; gap: 6px; }
+.secsel button { padding: 5px 10px; font-size: .92rem; }
+.cmp { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) minmax(0, 9rem); gap: 6px; align-items: center; font-size: .88rem; margin: 4px 0; }
+.cmp .bar { background: color-mix(in srgb, var(--ink2) 18%, transparent); height: 14px; border-radius: 4px; overflow: hidden; }
+.cmp .bar i { display: block; height: 100%; background: linear-gradient(90deg, color-mix(in srgb, var(--tau) 35%, transparent), var(--tau)); }
+.cmp b { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) { .cmp { grid-template-columns: minmax(0, 1fr); gap: 2px; } .cmp b { text-align: left; } .secsel button { flex: 1 1 30%; } }
+
+/* contraintes : traction = bleu, compression = rouge-orangé */
+.sg-t { --c: var(--accent); color: var(--accent); } .sg-c { --c: var(--tau); color: var(--tau); }
+.chip { display: inline-block; padding: 1px 10px; border-radius: 10px; font-size: .85rem; color: var(--on-accent); }
+.chip.t { background: var(--accent); } .chip.c { background: var(--tau); color: light-dark(#fff, #1b1006); }
+.dim { border-left: 3px solid var(--accent-soft); padding: 2px 0 2px 10px; margin: 6px 0 10px; }
+.verdict { font-size: 1.1rem; padding: 10px 12px; border-radius: var(--radius-sm); margin: 8px 0; }
+.verdict.ok { background: var(--ok-bg); } .verdict.bad { background: var(--bad-bg); }
+
+/* quiz */
+.qz-opt { display: block; width: 100%; text-align: left; margin: 6px 0; padding: 10px 12px; min-height: 44px; border: 1px solid var(--line); background: var(--card); border-radius: var(--radius-sm); }
+.qz-opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.qz-opt.good { border-color: var(--ok); background: var(--ok-bg); } .qz-opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.qz-exp { background: var(--accent-soft); border-radius: var(--radius-sm); padding: 8px 12px; margin: 8px 0; }
+.qz-prog { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.qz-prog i { display: block; height: 100%; background: var(--accent); transition: width .3s var(--ease); }
+.qz-score { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
