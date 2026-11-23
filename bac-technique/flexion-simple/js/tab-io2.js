@@ -27,7 +27,7 @@ export function fix(id, p) {
 }
 
 /**
- * Géométrie : propriétés { S, I, v, W } + top/bot (distances de G aux fibres extrêmes, mm),
+ * Géométrie : propriétés { S, I, v } + top/bot (distances de G aux fibres extrêmes, mm),
  * segs(y) = intervalles [x0,x1] de matière à l'altitude y (relative à G, vers le haut), w(y) = largeur de matière.
  */
 export function geom(id, p0) {

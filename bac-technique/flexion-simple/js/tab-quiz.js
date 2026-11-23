@@ -31,13 +31,13 @@ const Q = [
     '$I_{0}$ est le moment quadratique de la partie autour de <b>son propre</b> axe. $S\\,d^{2}$ « transporte » ce moment vers l\'axe $G_{z}$ de l\'ensemble ; $d = y_{c}-y_{G}$.'],
   ['Où la contrainte normale $\\sigma$ est-elle maximale dans une section fléchie ?',
     ['Sur les fibres les plus éloignées de la fibre neutre', 'Sur la fibre neutre', 'Au centre de gravité', 'Elle est uniforme dans la section'],
-    '$\\sigma = \\dfrac{M_{f}\\,y}{I_{Gz}}$ est proportionnelle à $y$ : nulle sur la fibre neutre ($y = 0$), maximale en $y = \\pm v$ : <b>$\\sigma_{\\max} = \\dfrac{|M_{f}|\\,v}{I_{Gz}} = \\dfrac{|M_{f}|}{W}$</b>.'],
+    '$\\sigma = \\dfrac{M_{f}\\,y}{I_{Gz}}$ est proportionnelle à $y$ : nulle sur la fibre neutre ($y = 0$), maximale en $y = \\pm v$ : <b>$\\sigma_{\\max} = \\dfrac{|M_{f}|\\,v}{I_{Gz}} = \\dfrac{|M_{f}|}{I_{Gz}/v}$</b>.'],
   ['On trouve $\\sigma_{\\max} = -180\\text{ MPa}$ (compression) avec $R_{pe} = 150\\text{ MPa}$. La condition de résistance est-elle vérifiée ?',
     ['Non : $|-180| = 180\\text{ MPa} > 150\\text{ MPa}$', 'Oui : $-180$ est inférieur à $150$', 'Oui : le signe négatif est favorable', 'On ne peut pas conclure'],
     'La condition s\'écrit avec des <b>valeurs absolues</b> : $|\\sigma_{\\max}| \\le R_{pe}$. Comparer $-180$ à $150$ sans valeur absolue donnerait un faux « résiste ». Ici $180 > 150$ : la poutre <b>ne résiste pas</b>.'],
   ['Avec $M_{f}$ en $\\text{N·mm}$, $I_{Gz}$ en $\\text{mm}^{4}$ et $v$ en $\\text{mm}$, la contrainte $\\sigma = \\dfrac{M_{f}\\,v}{I_{Gz}}$ s\'exprime en :',
     ['$\\text{MPa}$ ($= \\text{N/mm}^{2}$)', '$\\text{Pa}$', '$\\text{N·mm}$', '$\\text{mm}^{3}$'],
-    '$\\dfrac{\\text{N·mm}\\times\\text{mm}}{\\text{mm}^{4}} = \\text{N/mm}^{2} = $ <b>$\\text{MPa}$</b>. Le module de flexion $W = \\dfrac{I_{Gz}}{v}$ est en $\\text{mm}^{3}$ ; $R_{pe} = \\dfrac{R_{e}}{s}$ est aussi en $\\text{MPa}$.'],
+    '$\\dfrac{\\text{N·mm}\\times\\text{mm}}{\\text{mm}^{4}} = \\text{N/mm}^{2} = $ <b>$\\text{MPa}$</b>. Le rapport $\\dfrac{I_{Gz}}{v}$ est en $\\text{mm}^{3}$ ; $R_{pe} = \\dfrac{R_{e}}{s}$ est aussi en $\\text{MPa}$.'],
 ]
 
 const shuffle = (a) => { const r = a.map((t, i) => [Math.random(), t, i]).sort((x, y) => x[0] - y[0]); return r.map((x) => ({ t: x[1], good: x[2] === 0 })) }

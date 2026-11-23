@@ -99,8 +99,8 @@ export function mount(root) {
   function describe(g) {
     const e = eff(), rect = id === 'rect'
     info.innerHTML = `<h3>${SECS.find((x) => x.id === id).label}</h3>`
-    eqs(info, [...devI(id, g, rect && couche), `v = ${fn(g.v)}${MM}`, `W = \\dfrac{I_{Gz}}{v} = \\dfrac{${fn(g.I, 0)}}{${fn(g.v)}} = ${fn(g.W, 0)}${MM3}`, `S = ${fn(g.S, 0)}${MM2}`])
-    h('p', { class: 'lbl2' }, info, withTex('$v$ : distance de $G$ à la fibre la plus éloignée ; $W$ : module de flexion.'))
+    eqs(info, [...devI(id, g, rect && couche), `v = ${fn(g.v)}${MM}`, `\\dfrac{I_{Gz}}{v} = \\dfrac{${fn(g.I, 0)}}{${fn(g.v)}} = ${fn(g.I / g.v, 0)}${MM3}`, `S = ${fn(g.S, 0)}${MM2}`])
+    h('p', { class: 'lbl2' }, info, withTex('$v$ : distance de $G$ à la fibre la plus éloignée.'))
     if (rect) {
       const dbl = (e.b * (2 * e.h) ** 3) / 12 / ((e.b * e.h ** 3) / 12), deb = (p.b * p.h ** 3) / 12, cou = (p.h * p.b ** 3) / 12
       h('p', {}, info, withTex(`<b>Pourquoi $h^{3}$ ?</b> La hauteur $h$ intervient deux fois : plus de matière en haut et en bas ($\\times 2$) et des fibres deux fois plus loin, donc $y^{2}$ ×4 par fibre : doubler $h$ multiplie $I_{Gz}$ par <b>${dbl}</b>.`))

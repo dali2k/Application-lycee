@@ -33,28 +33,46 @@ export function distsTex(st, org, pts) {
   return lines.length ? aligned(lines) : ''
 }
 
-/** Pour chaque force : d (en x depuis A), puis M_G = ∓F × d. */
+/** Étape littérale : d et M_G de chaque force, sans aucune valeur numérique. */
+export function momentsSym(st, org) {
+  const sign = st.left ? '-' : '+', lines = []
+  for (const r of st.rows) {
+    const e = distExpr(r, st.left, org)
+    lines.push(`d_{${nm(r.f)}} &= ${e.tex}`)
+    lines.push(`M_{G}(${nm(r.f)}) &= ${sign}${nm(r.f)} \\times d_{${nm(r.f)}} \\\\[2pt]`)
+  }
+  for (const c of st.couples) lines.push(`M_{${c.id}} &= ${sv(c.m)}${NMM}`)
+  return aligned(lines)
+}
+
+/** ΣF, ΣM_G, T et M_f littéraux. */
+export function sumsSym(st) {
+  const op = st.left ? '-' : '+'
+  const fn = st.rows.map((r) => nm(r.f)).join(' + ')
+  const mn = [...st.rows.map((r) => `M_{G}(${nm(r.f)})`), ...st.couples.map((c) => `M_{${c.id}}`)].join(' + ')
+  return aligned([`\\sum F &= ${fn} \\\\[2pt]`, `\\sum M_G &= ${mn} \\\\[2pt]`, `T &= ${op}\\sum F \\qquad M_f = ${op}\\sum M_G`])
+}
+
+/** Application numérique : d puis M_G = ∓F × d, valeurs seulement ici. */
 export function momentsTex(st, x, org) {
   const X = x - org.x, sign = st.left ? '-' : '+', lines = []
   for (const r of st.rows) {
     const e = distExpr(r, st.left, org), a = r.f.x - org.x
     const num = a === 0 ? fmtNum(X) : st.left ? `${fmtNum(X)} - ${fmtNum(a)}` : `${fmtNum(a)} - ${fmtNum(X)}`
     lines.push(`d_{${nm(r.f)}} &= ${e.tex} = ${num} = ${fmtNum(r.d)}${MM}`)
-    lines.push(`M_{G}(${nm(r.f)}) &= ${sign}${nm(r.f)} \\times d_{${nm(r.f)}} \\\\ &= ${sign}${par(r.f.value, N)} \\times ${fmtNum(r.d)}${MM} = ${sv(r.m)}${NMM} \\\\[2pt]`)
+    lines.push(`M_{G}(${nm(r.f)}) &= ${sign}${par(r.f.value, N)} \\times ${fmtNum(r.d)}${MM} = ${sv(r.m)}${NMM} \\\\[2pt]`)
   }
   for (const c of st.couples) lines.push(`M_{${c.id}} &= ${sv(c.m)}${NMM}`)
   return aligned(lines)
 }
 
-/** ΣF et ΣM_G : somme littérale puis numérique. */
+/** ΣF et ΣM_G numériques. */
 export function sumsTex(st) {
-  const fn = st.rows.map((r) => nm(r.f)).join(' + ')
   const fv = st.rows.map((r) => par(r.f.value, N)).join(' + ')
   const mv = [...st.rows.map((r) => par(r.m, NMM)), ...st.couples.map((c) => par(c.m, NMM))].join(' + ')
-  const mn = [...st.rows.map((r) => `M_{G}(${nm(r.f)})`), ...st.couples.map((c) => `M_{${c.id}}`)].join(' + ')
   return aligned([
-    `\\sum F &= ${fn} \\\\ &= ${fv} \\\\ &= ${sv(st.sF)}${N} \\\\[4pt]`,
-    `\\sum M_G &= ${mn} \\\\ &= ${mv} \\\\ &= ${sv(st.sM)}${NMM}`,
+    `\\sum F &= ${fv} = ${sv(st.sF)}${N} \\\\[4pt]`,
+    `\\sum M_G &= ${mv} = ${sv(st.sM)}${NMM}`,
   ])
 }
 

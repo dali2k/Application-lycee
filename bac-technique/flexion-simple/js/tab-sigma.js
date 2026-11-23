@@ -31,7 +31,7 @@ export function mount(root) {
 
   const intro = h('div', { class: 'card' }, root, withTex(`<h2>Contraintes normales et calculs</h2>
     <p>La flexion crée dans la section une contrainte normale <b>$\\sigma$</b> qui varie <b>linéairement</b> avec la distance $y$ à la fibre neutre :</p>`))
-  eqs(intro, ['\\sigma(y) = \\dfrac{M_{f}\\,y}{I_{Gz}}', '\\sigma_{\\max} = \\dfrac{|M_{f}|\\,v}{I_{Gz}} = \\dfrac{|M_{f}|}{W}'])
+  eqs(intro, ['\\sigma(y) = \\dfrac{M_{f}\\,y}{I_{Gz}}', '\\sigma_{\\max} = \\dfrac{|M_{f}|\\,v}{I_{Gz}} = \\dfrac{|M_{f}|}{I_{Gz}/v}'])
   h('p', {}, intro, withTex('Pour $M_{f} > 0$ : fibres du bas <span class="chip t">tendues</span>, fibres du haut <span class="chip c">comprimées</span>. Sur la fibre neutre (passant par $G$), $\\sigma = 0$.'))
   let upAnim = () => {}
   const grid = h('div', { class: 'grid2' }, root), L = h('div', {}, grid), R = h('div', {}, grid)
@@ -84,10 +84,10 @@ export function mount(root) {
     const nat = (v) => (v > 0 ? '<span class="chip c">compression</span>' : v < 0 ? '<span class="chip t">traction</span>' : '')
     const top = sigmaAt(mf, g.I, g.top), bot = sigmaAt(mf, g.I, -g.bot), tau = tauMoy(T, g.S)
     res.innerHTML = '<h3>Résultats</h3>'
-    eqs(res, [...devI(id, g), `v = ${fn(g.v)}${MM}`, `W = \\dfrac{I_{Gz}}{v} = \\dfrac{${fn(g.I, 0)}}{${fn(g.v)}} = ${fn(g.W, 0)}${MM3}`])
+    eqs(res, [...devI(id, g), `v = ${fn(g.v)}${MM}`, `\\dfrac{I_{Gz}}{v} = \\dfrac{${fn(g.I, 0)}}{${fn(g.v)}} = ${fn(g.I / g.v, 0)}${MM3}`])
     h('p', {}, res, `${nat(top)} fibre haute : ${ks(`\\sigma = ${fn(Math.abs(top))}${MPA}`)}`)
     h('p', {}, res, `${nat(bot)} fibre basse : ${ks(`\\sigma = ${fn(Math.abs(bot))}${MPA}`)}`)
-    eqs(res, [`\\sigma_{\\max} = \\dfrac{|M_{f}|}{W} = \\dfrac{|${fn(mf, 0)}|}{${fn(g.W, 0)}} = ${fn(sm)}${MPA}`,
+    eqs(res, [`\\sigma_{\\max} = \\dfrac{|M_{f}|\\,v}{I_{Gz}} = \\dfrac{|${fn(mf, 0)}|\\times ${fn(g.v)}}{${fn(g.I, 0)}} = ${fn(sm)}${MPA}`,
       `R_{pe} = \\dfrac{R_{e}}{s} = \\dfrac{${fn(st.Re, 0)}}{${fn(st.s, 1)}} = ${fn(rp)}${MPA}`,
       `\\tau_{moy} = \\dfrac{|T_{\\max}|}{S} = \\dfrac{|${fn(T, 0)}|}{${fn(g.S, 0)}} = ${fn(tau)}${MPA}`])
     const v = h('div', { class: 'verdict ' + (ok ? 'ok' : 'bad') }, res)

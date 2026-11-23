@@ -61,7 +61,7 @@ export const profilT = (b, tf, tw, hw) =>
 export const profilI = (b, tf, tw, hw) =>
   composite([{ b, h: tf, yc: tf / 2 }, { b: tw, h: hw, yc: tf + hw / 2 }, { b, h: tf, yc: tf + hw + tf / 2 }])
 
-/** Propriétés { S, I, v, W } selon la section. Dimensions en mm. */
+/** Propriétés { S, I, v } selon la section. Dimensions en mm. */
 export function section(id, p) {
   let S, I, v
   if (id === 'rect') { S = p.b * p.h; I = iRect(p.b, p.h); v = p.h / 2 }
@@ -73,7 +73,7 @@ export function section(id, p) {
     const c = id === 'T' ? profilT(p.b, p.tf, p.tw, p.hw) : profilI(p.b, p.tf, p.tw, p.hw)
     S = c.S; I = c.I; v = c.v
   }
-  return { S, I, v, W: I / v }
+  return { S, I, v }
 }
 
 // ---------- Contraintes, résistance, flèche (valeurs absolues : pas de faux positifs) ----------
@@ -81,7 +81,7 @@ export const sigmaMax = (mf, I, v) => (Math.abs(mf) * v) / I
 export const sigmaAt = (mf, I, y) => (mf * y) / I // y > 0 vers le haut : Mf > 0 → compression en haut
 export const tauMoy = (t, S) => Math.abs(t) / S
 export const rpe = (re, s) => re / s
-export const wMini = (mf, rpeMPa) => Math.abs(mf) / rpeMPa
+export const igvMini = (mf, rpeMPa) => Math.abs(mf) / rpeMPa
 export const dMiniCercle = (mf, rpeMPa) => Math.cbrt((32 * Math.abs(mf)) / (PI * rpeMPa))
 export const hMiniRect = (mf, b, rpeMPa) => Math.sqrt((6 * Math.abs(mf)) / (b * rpeMPa))
 /** Flèche max : 'centre' = F·L³/(48·E·I) ; 'console' = F·L³/(3·E·I). */

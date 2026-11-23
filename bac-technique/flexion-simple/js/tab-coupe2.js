@@ -3,7 +3,7 @@ import { h, fmt } from './svg.js'
 import { coupe } from './calc.js'
 import { sg, ROT } from './fx.js'
 import { forceHtml, renderTex } from './math.js'
-import { headTex, momentsTex, sumsTex, resultTex, checkTex, origin, distsTex } from './tab-coupe4.js'
+import { headTex, momentsSym, sumsSym, momentsTex, sumsTex, resultTex, checkTex, origin, distsTex } from './tab-coupe4.js'
 
 /** Étude d'un côté : moments exacts autour de x (xe = x décalé de 0,01 si x tombe sur une force, pour choisir le côté). */
 export function study(loads, x, xe, side) {
@@ -50,7 +50,10 @@ export function report(out, loads, x, xe, side) {
     h('div', {}, out, table(st))
     renderTex(out, headTex(st.left))
     const org = origin(loads), dt = distsTex(st, org, loads.forces)
-    h('p', { class: 'note' }, out, `Origine en <b>${org.id}</b> (premier point à gauche) : <b>x</b> = distance de ${org.id} à G = ${fmt(x - org.x, 2)} mm.`)
+    h('p', { class: 'note' }, out, `Origine en <b>${org.id}</b> (premier point à gauche) : <b>x</b> = distance de ${org.id} à G.`)
+    renderTex(out, momentsSym(st, org))
+    renderTex(out, sumsSym(st))
+    h('p', { class: 'note' }, out, `<b>Application numérique</b> : x = ${fmt(x - org.x, 2)} mm.`)
     if (dt) renderTex(out, dt)
     renderTex(out, momentsTex(st, x, org))
     renderTex(out, sumsTex(st))

@@ -46,7 +46,11 @@ function momentItems(T, c, all) {
     .map((t) => ({ t, s: t.sense * (t.f.x > c.x ? 1 : -1), d: dist(c, all.find((q) => q.x === t.f.x), all) }))
 }
 const symEq = (it) => `${it.map((i) => `${sg(i.s)} ${i.t.name} \\cdot ${i.d.sym}`).join(' ')} = 0`
-const numTerm = (i, keep) => `${sg(i.s)} ${keep ? i.t.name : fmtNum(i.t.mod)} \\cdot ${fmtNum(i.d.d)}`
+/** Somme signée : parts = [{ neg, b }] → « -a + b - c » (0 si vide). */
+const lin = (parts) => (parts.length ? parts.map((p, i) => (i === 0 ? (p.neg ? '-' : '') : ` ${p.neg ? '-' : '+'} `) + p.b).join('') : '0')
+const numTerm = (i) => `${sg(i.s)} ${fmtNum(i.t.mod)} \\cdot ${fmtNum(i.d.d)}`
+const comps = (items) => unique(items.flatMap((i) => (i.d.comp ? [i.d.comp] : [])))
+const AN = '\\text{Application numérique :}'
 
 function dataStep(ex, T, all) {
   const lines = [`L = ${fmtNum(ex.L)}${MM}`]
@@ -64,30 +68,32 @@ function momentsStep(T, u1, u2, all) {
   const c = ptOf(u1.f), items = momentItems(T, c, all)
   const tgt = items.find((i) => i.t === u2), others = items.filter((i) => i !== tgt)
   const K = others.reduce((s, i) => s + i.s * i.t.mod * i.d.d, 0), rhs = -tgt.s * K, val = rhs / tgt.d.d
-  const zero = T.filter((t) => t !== u1 && t.f.x === c.x).map((t) => `${t.name}\\ \\text{passe par } ${c.id} : \\text{moment nul}`)
-  const end = u2.mod === 0 ? [`${u2.name} \\cdot ${tgt.d.sym} = 0 \\Rightarrow ${u2.name} = 0${N}`]
-    : [`${u2.name} \\cdot ${fmtNum(tgt.d.d)} = ${fmtNum(rhs)}`, `${u2.name} = \\dfrac{${fmtNum(rhs)}}{${fmtNum(tgt.d.d)}} = ${fmtNum(val)}${N}`]
+  const neg = (i) => -tgt.s * i.s < 0
+  const zero = T.filter((t) => t !== u1 && t.f.x === c.x).map((t) => `${t.name}\ \\text{passe par } ${c.id} : \\text{moment nul}`)
+  const symSol = others.length ? `${u2.name} = \\dfrac{${lin(others.map((i) => ({ neg: neg(i), b: `${i.t.name} \\cdot ${i.d.sym}` })))}}{${tgt.d.sym}}` : `${u2.name} = 0`
+  const numSol = others.length
+    ? `${u2.name} = \\dfrac{${lin(others.map((i) => ({ neg: neg(i), b: `${fmtNum(i.t.mod)} \\cdot ${fmtNum(i.d.d)}` })))}}{${fmtNum(tgt.d.d)}} = \\dfrac{${fmtNum(rhs)}}{${fmtNum(tgt.d.d)}} = ${fmtNum(val)}${N}`
+    : `${u2.name} = 0${N}`
   return { title: `Somme des moments : calcul de ${forceText(u2.f)}`, lines: [
-    ...unique(items.flatMap((i) => (i.d.comp ? [i.d.comp] : []))), ...zero, `\\sum M_{${c.n}} = 0`, symEq(items),
-    `${items.map((i) => numTerm(i, i === tgt)).join(' ')} = 0`, ...end] }
+    ...zero, `\\sum M_{${c.n}} = 0`, symEq(items), symSol, AN, ...comps(items), numSol] }
 }
 
 function forcesStep(order, u1) {
-  const terms = order.filter((t) => t !== u1).map((t) => ({ t, v: -u1.sense * t.sense * t.mod }))
-  terms.sort((a, b) => Number(b.v > 0) - Number(a.v > 0))
+  const terms = order.filter((t) => t !== u1).map((t) => ({ t, c: -u1.sense * t.sense, v: -u1.sense * t.sense * t.mod }))
+  terms.sort((a, b) => Number(b.c > 0) - Number(a.c > 0))
   const val = terms.reduce((s, q) => s + q.v, 0)
-  const expr = terms.map((q, i) => (i === 0 ? fmtNum(q.v) : ` ${sg(q.v)} ${fmtNum(Math.abs(q.v))}`)).join('')
+  const sym = lin(terms.map((q) => ({ neg: q.c < 0, b: q.t.name })))
+  const num = lin(terms.map((q) => ({ neg: q.c < 0, b: fmtNum(q.t.mod) })))
   return { title: `Somme des forces : calcul de ${forceText(u1.f)}`, lines: ['\\sum F = 0',
     `${order.map((t) => `${sg(t.sense)} ${t.name}`).join(' ')} = 0`,
-    `${order.map((t) => `${sg(t.sense)} ${t === u1 ? t.name : fmtNum(t.mod)}`).join(' ')} = 0`,
-    `${u1.name} = ${expr} = ${fmtNum(val)}${N}`] }
+    `${u1.name} = ${sym}`, AN, `${u1.name} = ${num} = ${fmtNum(val)}${N}`] }
 }
 
 function checkStep(T, u2, all) {
   const c = ptOf(u2.f), items = momentItems(T, c, all)
   const sum = items.reduce((s, i) => s + i.s * i.t.mod * i.d.d, 0), z = Math.abs(sum) < 1e-6 ? 0 : sum
   return { title: 'Vérification', lines: [`\\sum M_{${c.n}} = 0 \\quad \\text{(autour de } ${c.n}\\text{)}`,
-    `${items.map((i) => numTerm(i, false)).join(' ')} = ${fmtNum(z)}${z === 0 ? ' \\;\\checkmark' : ''}`] }
+    `${items.map((i) => numTerm(i)).join(' ')} = ${fmtNum(z)}${z === 0 ? ' \\;\\checkmark' : ''}`] }
 }
 
 /** Encastrement : ΣF = 0 → R_A ; ΣM/A = 0 → M_A (sens positif +). */
@@ -96,9 +102,10 @@ function fixedSteps(ex, T, all) {
   const items = momentItems(T, c, all), K = items.reduce((s, i) => s + i.s * i.t.mod * i.d.d, 0)
   const MA = `M_{${c.n}}`, sense = Me === 0 ? 'moment nul' : Me > 0 ? 'sens positif' : 'sens négatif'
   return [forcesStep([u, ...T.filter((t) => !t.unknown)], u),
-    { title: `Somme des moments : calcul de M_${c.id}`, lines: [...unique(items.flatMap((i) => (i.d.comp ? [i.d.comp] : []))),
+    { title: `Somme des moments : calcul de M_${c.id}`, lines: [
       `\\sum M_{${c.n}} = 0 \\quad \\text{(sens positif } (+))`, `${MA} ${items.map((i) => `${sg(i.s)} ${i.t.name} \\cdot ${i.d.sym}`).join(' ')} = 0`,
-      `${MA} ${items.map((i) => numTerm(i, false)).join(' ')} = 0`, `${MA} = ${fmtNum(-K)}${NMM}\\ (\\text{${sense}})`] },
+      `${MA} = ${lin(items.map((i) => ({ neg: i.s > 0, b: `${i.t.name} \\cdot ${i.d.sym}` })))}`, AN, ...comps(items),
+      `${MA} = ${lin(items.map((i) => ({ neg: i.s > 0, b: `${fmtNum(i.t.mod)} \\cdot ${fmtNum(i.d.d)}` })))} = ${fmtNum(-K)}${NMM}\\ (\\text{${sense}})`] },
     { title: 'Résultat', lines: [`${u.name} = ${fmtNum(u.mod)}${N}\\ (\\text{${sayTerm(u)}})`, `${MA} = ${fmtNum(Math.abs(Me))}${NMM}\\ (\\text{${sense}})`] }]
 }
 
