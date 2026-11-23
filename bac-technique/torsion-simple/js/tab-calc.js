@@ -101,26 +101,31 @@ export function mount(root) {
         inv = row('d max (résistance)', t.res) + row('d max (rigidité)', t.rig) +
           (t.retenu === null ? '<tr><td colspan="2" class="bad">Aucun d ne convient : augmenter D.</td></tr>' : row('d à retenir (le plus petit)', t.retenu, true))
         if (t.retenu !== null) apply = { key: 'd', val: Math.floor(t.retenu * 10) / 10 }
-        stepsInv.push(`Calcul de d max (D = ${fmt(q.D, 1)} mm fixé) : résistance D⁴ − d⁴ ≥ 16·Mt·D / (π·Rpg) = ${fmt(cc * q.D, 0)} mm⁴ → d ≤ <b>${val(t.res)}</b>`,
-          `Rigidité : D⁴ − d⁴ ≥ 32·Mt / (π·G·θlim) = ${fmt(KK, 0)} mm⁴ → d ≤ <b>${val(t.rig)}</b> ; on retient le plus petit : <b>${t.retenu === null ? 'aucun d ne convient' : `d max = ${fmt(t.retenu, 2)} mm`}</b>`)
+        stepsInv.push(`Calcul de d max (D = ${fmt(q.D, 1)} mm fixé) : résistance D⁴ − d⁴ ≥ 16·Mt·D / (π·Rpg) ; A.N. : 16 × ${fmt(m, 0)} × ${fmt(q.D, 1)} / (π × ${fmt(rp, 1)}) = ${fmt(cc * q.D, 0)} mm⁴ → d ≤ <b>${val(t.res)}</b>`,
+          `Rigidité : D⁴ − d⁴ ≥ 32·Mt / (π·G·θlim) ; A.N. : 32 × ${fmt(m, 0)} / (π × ${fmt(G, 0)} × ${fmt(thLim, 9)}) = ${fmt(KK, 0)} mm⁴ → d ≤ <b>${val(t.rig)}</b> ; on retient le plus petit : <b>${t.retenu === null ? 'aucun d ne convient' : `d max = ${fmt(t.retenu, 2)} mm`}</b>`)
       } else {
         const t = c.DMinTube(q.d, m, rp, G, thLim)
         inv = row('D min (résistance)', t.res) + row('D min (rigidité)', t.rig) + row('D à retenir (le plus grand)', t.retenu, true)
         if (Number.isFinite(t.retenu)) apply = { key: 'D', val: Math.ceil(t.retenu * 10) / 10 }
-        stepsInv.push(`Calcul de D min (d = ${fmt(q.d, 1)} mm fixé) : rigidité D⁴ ≥ d⁴ + 32·Mt / (π·G·θlim) = ${fmt(q.d ** 4 + KK, 0)} mm⁴ → D ≥ <b>${val(t.rig)}</b>`,
+        stepsInv.push(`Calcul de D min (d = ${fmt(q.d, 1)} mm fixé) : rigidité D⁴ ≥ d⁴ + 32·Mt / (π·G·θlim) ; A.N. : ${fmt(q.d, 1)}⁴ + 32 × ${fmt(m, 0)} / (π × ${fmt(G, 0)} × ${fmt(thLim, 9)}) = ${fmt(q.d ** 4 + KK, 0)} mm⁴ → D ≥ <b>${val(t.rig)}</b>`,
           `Résistance : D⁴ − d⁴ ≥ 16·Mt·D / (π·Rpg), équation en D résolue par approches successives → D ≥ <b>${val(t.res)}</b> ; on retient le plus grand : <b>D min = ${fmt(t.retenu, 2)} mm</b>`)
       }
     }
     const circ = SECTIONS[v.sec].circ
-    const steps = []
-    if (v.mode === 'p') steps.push(`Couple : Mt = P / ω = ${fmt(v.P * 1000, 0)} / (2π·${fmt(v.N, 0)}/60) = <b>${fmt(Mt / 1000, 2)} N·m</b>`)
-    steps.push(`Résistance pratique : Rpg = Reg / s = ${fmt(v.Reg, 0)} / ${fmt(v.s, 2)} = <b>${fmt(rp, 1)} MPa</b>`)
-    if (circ) steps.push(`Io = ${v.sec === 'plein' ? `π·d⁴/32 = π·${fmt(q.d, 1)}⁴/32` : `π(D⁴ − d⁴)/32`} = <b>${fmt(r.io, 0)} mm⁴</b> ; Io/ρmax = <b>${fmt(r.w, 0)} mm³</b>`)
+    // Chaque étape : formule littérale d'abord ; les valeurs n'apparaissent qu'à la ligne « A.N. ».
+    const an = (sym, num) => `${sym}<br><i>Application numérique :</i> ${num}`
+    const mAbs = Math.abs(Mt), steps = []
+    if (v.mode === 'p') steps.push(an('Couple : Mt = P / ω avec ω = 2π·N / 60', `Mt = ${fmt(v.P * 1000, 0)} / (2π·${fmt(v.N, 0)}/60) = <b>${fmt(Mt / 1000, 2)} N·m</b>`))
+    steps.push(an('Résistance pratique : Rpg = Reg / s', `Rpg = ${fmt(v.Reg, 0)} / ${fmt(v.s, 2)} = <b>${fmt(rp, 1)} MPa</b>`))
+    if (circ) steps.push(an(`Moment quadratique polaire : Io = ${v.sec === 'plein' ? 'π·d⁴/32' : 'π(D⁴ − d⁴)/32'} ; module Io/ρmax`,
+      `Io = ${v.sec === 'plein' ? `π·${fmt(q.d, 1)}⁴/32` : `π(${fmt(q.D, 1)}⁴ − ${fmt(q.d, 1)}⁴)/32`} = <b>${fmt(r.io, 0)} mm⁴</b> ; Io/ρmax = <b>${fmt(r.w, 0)} mm³</b>`))
     else steps.push(`Section ${SECTIONS[v.sec].label.toLowerCase()} : formules de tables (coefficients de Saint-Venant / Bredt).`)
-    steps.push(`Contrainte : |τmax| = |${circ ? 'Mt / (Io/ρmax)' : 'formule de la section'}| = <b>${fmt(tauA, 2)} MPa</b> ${tauA <= rp ? '≤' : '>'} Rpg → ${tag(okR)}`)
-    steps.push(`Rigidité : |θ| = |${circ ? 'Mt / (G·Io)' : 'formule de la section'}| = ${fmt(thA, 9)} rad/mm = <b>${fmt(thDegM, 4)} °/m</b> ${okT ? '≤' : '>'} ${fmt(v.thl, 3)} °/m → ${tag(okT)}`)
+    steps.push(an(`Contrainte : |τmax| = |${circ ? 'Mt| / (Io/ρmax)' : 'formule de la section|'} ≤ Rpg`,
+      `${circ ? `|τmax| = ${fmt(mAbs, 0)} / ${fmt(r.w, 0)} = ` : '|τmax| = '}<b>${fmt(tauA, 2)} MPa</b> ${tauA <= rp ? '≤' : '>'} ${fmt(rp, 1)} MPa → ${tag(okR)}`))
+    steps.push(an(`Rigidité : |θ| = ${circ ? '|Mt| / (G·Io)' : '|formule de la section|'} ≤ θlim`,
+      `${circ ? `|θ| = ${fmt(mAbs, 0)} / (${fmt(G, 0)} × ${fmt(r.io, 0)}) = ` : '|θ| = '}${fmt(thA, 9)} rad/mm = <b>${fmt(thDegM, 4)} °/m</b> ${okT ? '≤' : '>'} ${fmt(v.thl, 3)} °/m → ${tag(okT)}`))
     steps.push(...stepsInv)
-    steps.push(`Angle de torsion : α = θ·L = <b>${fmt(al, 3)} °</b> sur ${fmt(v.L, 0)} mm`)
+    steps.push(an('Angle de torsion : α = θ·L', `α = ${fmt(thA, 9)} × ${fmt(v.L, 0)} = <b>${fmt(al, 3)} °</b>`))
     const alRad = r.theta * v.L, vis = Math.sign(alRad) * 2.6 * (1 - Math.exp(-(Math.abs(alRad) * 300) / 2.6))
     const dimTxt = { plein: `d = ${fmt(q.d, 0)} mm`, tube: `D = ${fmt(q.D, 0)} mm, d = ${fmt(q.d, 0)} mm`, rect: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm`, rectcreux: `b × h = ${fmt(q.b, 0)} × ${fmt(q.h, 0)} mm, épaisseur t = ${fmt(q.t, 0)} mm` }[v.sec]
     if (Number.isFinite(alRad) && v.L > 0 && SECTIONS[v.sec].dims.every(([k]) => Number.isFinite(q[k]) && q[k] > 0)) {
